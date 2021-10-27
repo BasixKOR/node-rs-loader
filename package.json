@@ -1,0 +1,7 @@
+{
+  "name": "@basixjs/node-rs-loader",
+  "packageManager": "yarn@3.1.0",
+  "devDependencies": {
+    "microbundle": "^0.14.1"
+  }
+}
