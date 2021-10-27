@@ -16,8 +16,7 @@ module.exports = {
       {
         test: ['@node-rs/bcrypt'],
         loader: "@basixjs/node-rs-loader",
-      }
-      }
+      },
       {
         test: /\.node$/,
         loader: "node-loader",
