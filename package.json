@@ -8,6 +8,13 @@
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.module.js",
+  "scripts": {
+    "build": "microbundle --target node",
+    "dev": "microbundle watch --target node"
+  },
+  "engines": {
+    "node": ">=12.9.0"
+  },
   "packageManager": "yarn@3.1.0",
   "devDependencies": {
     "@types/node": "^16.11.6",
