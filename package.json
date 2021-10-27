@@ -10,6 +10,7 @@
   "module": "./dist/index.module.js",
   "packageManager": "yarn@3.1.0",
   "devDependencies": {
+    "@types/node": "^16.11.6",
     "microbundle": "^0.14.1",
     "typescript": "^4.4.4",
     "webpack": "^5.60.0"
