@@ -8,6 +8,8 @@ namespace NodeRsLoader {
   }
 }
 
+const loadBindingsRegex = /loadBinding\(\s*__dirname,\s*['"][^'"]+['"],\s*['"]([^'"]+)/m;
+
 const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   this,
   source
@@ -28,12 +30,15 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
     },
   });
 
+  // Get name of native modules.
+  const moduleName = loadBindingsRegex.exec(source)?.[1];
+  if(!moduleName) throw new Error("Could not find module name");
+
   // Resolves native modules from triples.
-  const moduleName = this.resourcePath;
   const resolve = this.getResolve({ extensions: [".node"] });
   const promises = await Promise.allSettled(
     triples.map((triple) =>
-      resolve(this.context, `${this.resourcePath}-${triple}`).then(() => triple)
+      resolve(this.context, `${moduleName}-${triple}`).then(() => triple)
     )
   );
   const paths = promises.flatMap((p) =>
