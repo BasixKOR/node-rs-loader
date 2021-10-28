@@ -14,7 +14,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: ['@node-rs/bcrypt'],
+        test: ['@node-rs/bcrypt'].map(m => require.resolve(m)),
         loader: "@basixjs/node-rs-loader",
       },
       {
