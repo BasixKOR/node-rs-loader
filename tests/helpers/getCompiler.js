@@ -1,14 +1,16 @@
-import path from "path";
+import { createRequire } from 'module';
 
 import webpack from "webpack";
 import { createFsFromVolume, Volume } from "memfs";
 
 import defaultConfig from "../fixtures/webpack.config.cjs";
 
+const require = createRequire(import.meta.url);
+
 export default (fixture, loaderOptions = {}, config = {}) => {
   const fullConfig = {
     ...defaultConfig,
-    entry: path.resolve(import.meta.url, "../fixtures", fixture),
+    entry: require.resolve('../fixtures/' + fixture),
     ...config,
   };
 
