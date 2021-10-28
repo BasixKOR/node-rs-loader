@@ -44,10 +44,10 @@ const NodeRsLoader: RawLoaderDefinition<NodeRsLoader.Options> = async function (
   const modules = paths
     .map(
       (triple) =>
-        `"${triple}":require(${this.utils.contextify(
+        `"${triple}":require('${this.utils.contextify(
           this.context,
           `${moduleName}-${triple}`
-        )})`
+        )}')`
     )
     .join(",");
 
