@@ -1,7 +1,7 @@
 {
   "name": "@basixjs/node-rs-loader",
   "type": "module",
-  "source": "",
+  "source": "./src/index.ts",
   "exports": {
     "require": "./dist/index.cjs",
     "default": "./dist/index.modern.js"
@@ -10,19 +10,30 @@
   "module": "./dist/index.module.js",
   "scripts": {
     "build": "microbundle --target node",
-    "dev": "microbundle watch --target node"
+    "dev": "microbundle watch --target node",
+    "test": "ava"
   },
   "engines": {
     "node": ">=12.9.0"
   },
   "packageManager": "yarn@3.1.0",
   "devDependencies": {
+    "@node-rs/xxhash": "^1.0.0",
+    "@types/loader-utils": "^2.0.3",
     "@types/node": "^16.11.6",
+    "ava": "^3.15.0",
+    "memfs": "^3.3.0",
     "microbundle": "^0.14.1",
+    "node-loader": "^2.0.0",
     "typescript": "^4.4.4",
-    "webpack": "^5.60.0"
+    "webpack": "^5.60.0",
+    "webpack-cli": "^4.9.1"
   },
   "peerDependencies": {
     "webpack": "^4.0.0 || ^5.0.0"
+  },
+  "dependencies": {
+    "@napi-rs/triples": "^1.0.3",
+    "loader-utils": "^3.0.0"
   }
 }
