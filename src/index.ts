@@ -1,4 +1,4 @@
-import type { RawLoaderDefinition } from "webpack";
+import type { LoaderDefinition } from "webpack";
 import { platform, arch } from "os";
 import { platformArchTriples } from "@napi-rs/triples";
 
@@ -8,7 +8,7 @@ namespace NodeRsLoader {
   }
 }
 
-const NodeRsLoader: RawLoaderDefinition<NodeRsLoader.Options> = async function (
+const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   this,
   source
 ) {
@@ -59,7 +59,5 @@ const NodeRsLoader: RawLoaderDefinition<NodeRsLoader.Options> = async function (
           module.exports = a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0];
   `;
 };
-
-NodeRsLoader.raw = true;
 
 export default NodeRsLoader;
