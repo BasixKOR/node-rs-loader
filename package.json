@@ -1,5 +1,6 @@
 {
   "name": "@basixjs/node-rs-loader",
+  "version": "0.0.0-next",
   "type": "module",
   "source": "./src/index.ts",
   "exports": {
