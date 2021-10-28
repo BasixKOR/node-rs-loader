@@ -19,9 +19,8 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   } = this.getOptions({
     type: "object",
     properties: {
-      userId: {
+      triples: {
         type: "array",
-        required: false,
         items: {
           type: "string",
         },
