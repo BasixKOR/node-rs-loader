@@ -48,7 +48,7 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   const modules = paths
     .map(
       (triple) =>
-        `"${triple}":require('${this.utils.contextify(
+        `"${triple}":require.resolve('${this.utils.contextify(
           this.context,
           `${moduleName}-${triple}`
         )}')`
@@ -60,7 +60,7 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
           const os = require('os');
           const {platformArchTriples} = require('@napi-rs/triples');
           const a = platformArchTriples[os.platform()][os.arch()];
-          module.exports = a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0];
+          module.exports = __webpack_require__(a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0]);
   `;
 };
 
