@@ -55,13 +55,7 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
     )
     .join(",");
 
-  return `
-          const m = {${modules}};
-          const os = require('os');
-          const {platformArchTriples} = require('@napi-rs/triples');
-          const a = platformArchTriples[os.platform()][os.arch()];
-          module.exports = a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0];
-  `;
+  return `const r={${modules}},e=require("os"),{platformArchTriples:p}=require("@napi-rs/triples"),l=p[e.platform()][e.arch()];module.exports=l.filter((e=>e.platformArchABI in r)).map((e=>r[e.platformArchABI]))[0];`;
 };
 
 export default NodeRsLoader;
