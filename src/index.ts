@@ -1,10 +1,12 @@
 import type { LoaderDefinition } from "webpack";
 import { platform, arch } from "os";
 import { platformArchTriples } from "@napi-rs/triples";
+import { generateDumbImplementation, generateDetectorImplementation } from "./generateImplementation"
 
 namespace NodeRsLoader {
   export interface Options {
     triples?: string[];
+    detect?: boolean;
   }
 }
 
@@ -18,6 +20,7 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
     triples = platformArchTriples[platform()][arch()].map(
       (t) => t.platformArchABI
     ),
+    detect = true
   } = this.getOptions({
     type: "object",
     properties: {
@@ -27,6 +30,10 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
           type: "string",
         },
       },
+      detect: {
+        type: "boolean",
+        default: true,
+      }
     },
   });
 
@@ -46,23 +53,8 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
     p.status === "fulfilled" ? p.value : []
   );
 
-  const modules = paths
-    .map(
-      (triple) =>
-        `"${triple}":require.resolve('${this.utils.contextify(
-          this.context,
-          `${moduleName}-${triple}`
-        )}')`
-    )
-    .join(",");
-
-  return source.replace(loadBindingsCall[0], `(function(){
-    const m = {${modules}};
-    const os = require('os');
-    const {platformArchTriples} = require('@napi-rs/triples');
-    const a = platformArchTriples[os.platform()][os.arch()];
-    return __webpack_require__(a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0]);
-  })()`);
+  const generateImplementation = detect ? generateDetectorImplementation : generateDumbImplementation;
+  return source.replace(loadBindingsCall[0], generateImplementation(this, paths, moduleName));
 };
 
 export default NodeRsLoader;
