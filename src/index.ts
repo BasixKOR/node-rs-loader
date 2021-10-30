@@ -8,7 +8,7 @@ namespace NodeRsLoader {
   }
 }
 
-const loadBindingsRegex = /loadBinding\(\s*__dirname,\s*['"][^'"]+['"],\s*['"]([^'"]+)/m;
+const loadBindingsRegex = /loadBinding\(\s*__dirname,\s*['"][^'"]+['"],\s*['"]([^'"]+)['"]\)/m;
 
 const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   this,
@@ -31,7 +31,8 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
   });
 
   // Get name of native modules.
-  const moduleName = loadBindingsRegex.exec(source)?.[1];
+  const loadBindingsCall = loadBindingsRegex.exec(source);
+  const moduleName = loadBindingsCall?.[1];
   if(!moduleName) throw new Error("Could not find module name");
 
   // Resolves native modules from triples.
@@ -55,13 +56,13 @@ const NodeRsLoader: LoaderDefinition<NodeRsLoader.Options> = async function (
     )
     .join(",");
 
-  return `
-          const m = {${modules}};
-          const os = require('os');
-          const {platformArchTriples} = require('@napi-rs/triples');
-          const a = platformArchTriples[os.platform()][os.arch()];
-          module.exports = __webpack_require__(a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0]);
-  `;
+  return source.replace(loadBindingsCall[0], `(function(){
+    const m = {${modules}};
+    const os = require('os');
+    const {platformArchTriples} = require('@napi-rs/triples');
+    const a = platformArchTriples[os.platform()][os.arch()];
+    return __webpack_require__(a.filter(t=>t.platformArchABI in m).map(t=>m[t.platformArchABI])[0]);
+  })()`);
 };
 
 export default NodeRsLoader;
